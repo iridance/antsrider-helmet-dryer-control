@@ -17,7 +17,7 @@
   :root{color-scheme:dark;--accent:#b6ff00;--on-accent:#111;--bg:#111;--card:#1c1c1c;--chip:#2a2a2a;--text:#eee;--muted:#8a8a8a;--track-off:#444;--knob-off:#bbb;--dot-off:#555;--warn:#d7b24a;--ring:#fff;--log:color-mix(in srgb,var(--accent) 65%,#fff 0%)}
   *{box-sizing:border-box}
   body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Noto Sans TC","PingFang TC",sans-serif;display:flex;flex-direction:column;align-items:center}
-  main{width:100%;max-width:460px;padding:20px 16px 8px;flex:1}
+  main{width:100%;max-width:460px;padding:20px 16px 0}
   header{margin-bottom:16px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
   .tools{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
   .lang{border:0;border-radius:10px;height:30px;padding:0 12px;background:var(--chip);color:var(--text);font-weight:700;font-size:13px;cursor:pointer}
@@ -92,12 +92,12 @@
   .tbtn:disabled{opacity:.5;cursor:not-allowed}
   .hint{margin:8px 0 0}
   #log{font:12px/1.6 ui-monospace,Consolas,monospace;color:var(--log);white-space:pre-wrap;overflow:auto;background:var(--bg);border-radius:12px;padding:10px;height:min(60vh,420px)}
-  .logbtn{display:block;margin:0 auto 14px;border:0;background:none;color:var(--muted);font-size:13px;cursor:pointer;text-decoration:underline;padding:4px}
+  .logbtn{display:block;margin:4px auto 0;border:0;background:none;color:var(--muted);font-size:13px;cursor:pointer;text-decoration:underline;padding:4px}
   dialog{border:0;border-radius:16px;background:var(--card);color:var(--text);padding:16px;width:min(560px,92vw)}
   dialog::backdrop{background:rgba(0,0,0,.65)}
   .mhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
   .mhead h2{font-size:16px;margin:0}
-  footer{width:100%;max-width:460px;padding:16px;text-align:center;font-size:12px;line-height:1.7;color:var(--muted)}
+  footer{width:100%;max-width:460px;padding:8px 16px 20px;text-align:center;font-size:12px;line-height:1.7;color:var(--muted)}
   footer a{color:inherit}
   footer a .gh{vertical-align:-2px;margin-right:4px}
 </style>

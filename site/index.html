@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#111111">
 <title>NA ANTSRIDER</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,500,0..1,0&display=block">
@@ -53,8 +54,8 @@
   .switch::after{content:"";position:absolute;top:4px;left:4px;width:24px;height:24px;border-radius:50%;background:var(--knob-off);transition:.2s}
   .switch.on{background:var(--accent)}.switch.on::after{left:28px;background:var(--on-accent)}
   .switch:disabled{opacity:.35;cursor:not-allowed}
-  #msg{font-size:13px;color:var(--warn);margin:-4px 4px 14px}
-  #msg:empty{display:none}
+  #msg{position:fixed;left:50%;top:20px;transform:translate(-50%,-16px);max-width:min(420px,calc(100vw - 32px));padding:10px 16px;border-radius:12px;background:#2b2f36;color:#fff;font-size:13px;line-height:1.5;box-shadow:0 6px 24px rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:50;text-align:center}
+  #msg.show{opacity:1;transform:translate(-50%,0)}
   details{margin-bottom:14px}
   summary{cursor:pointer}
   details.fold{padding:0}
@@ -117,7 +118,7 @@
     <div class="conn">
       <div class="state" id="state"><span class="dot"></span><span id="stateText" data-i18n="off">尚未連線</span></div>
       <div class="connright">
-        <label class="autobox"><span data-i18n="auto">自動連線</span>
+        <label class="autobox"><span data-i18n="auto">自動</span>
           <button class="switch" id="auto" role="switch" aria-checked="false"></button>
         </label>
         <button class="btn sm" id="connect"><i class="ms">bluetooth_searching</i><span data-i18n="connect">連線設備</span></button>
@@ -132,7 +133,7 @@
     </div>
     <button class="btn start-btn" id="start" aria-pressed="false" disabled><i class="ms" id="startIcon">power_settings_new</i><span id="startText">開啟</span></button>
   </section>
-  <div id="msg"></div>
+  <div id="msg" role="status" aria-live="polite"></div>
 
   <details class="card fold" data-fold="fan" open>
     <summary class="section-title"><h2 class="iconrow"><i class="ms">mode_fan</i><span data-i18n="fan">風力</span></h2><span id="fanNow">關閉</span></summary>
@@ -167,7 +168,7 @@ const TIME_OPTIONS = [0,5,10,15,20,30,45,60,90,120,180,240];
 const $ = id => document.getElementById(id);
 
 const I18N = {
- zh: {title:'安全帽風乾消毒機',conn:'連線',off:'尚未連線',connect:'連線設備',disconnect:'中斷連線',auto:'自動連線',autoDesc:'開啟頁面或斷線後，設備在附近時自動連上',autoLock:'請先手動連線一次，成功後即可啟用',clear:'清除',start:'開啟',stop:'關閉',stopped:'已關閉',startNone:'請先選擇風力、定時或紫外線',startSent:'已套用上次的設定',fan:'風力',time:'定時',uv:'紫外線殺菌',logTitle:'trace log',rights:'以 MIT 授權釋出。',disclaimer:'本專案為非官方開發，與 ANTSRIDER 品牌無關聯。',
+ zh: {title:'安全帽風乾消毒機',conn:'連線',off:'尚未連線',connect:'連線設備',disconnect:'中斷連線',auto:'自動',autoDesc:'開啟頁面或斷線後，設備在附近時自動連上',autoLock:'請先手動連線一次，成功後即可啟用',clear:'清除',start:'開啟',stop:'關閉',stopped:'已關閉',startNone:'請先選擇風力、定時或紫外線',startSent:'已套用上次的設定',fan:'風力',time:'定時',uv:'紫外線殺菌',logTitle:'trace log',rights:'以 MIT 授權釋出。',disclaimer:'本專案為非官方開發，與 ANTSRIDER 品牌無關聯。',
   offv:'關閉',onv:'開啟',fanN:n=>n+' 檔',minN:n=>n+' 分鐘',hourN:n=>n+' 小時',connected:'已連線',notConn:'尚未連線設備',sent:'送出 ',sendFail:'送出失敗：',sendFailMsg:'指令送出失敗，請確認設備仍在連線',
   noBt:'此瀏覽器不支援藍牙連線，請使用 Android 或電腦版的 Chrome／Edge，並以 https 開啟。',dropped:'設備已斷線',droppedAuto:'設備已斷線，等待自動重新連線…',connecting:'連線中…',noNotify:'未啟用通知：',reply:'設備回傳',
   aWaiting:'自動連線：已在等待中',aNoApi:'自動連線：此瀏覽器不支援 getDevices',aNoApiMsg:'此瀏覽器不支援自動連線',aStart:'自動連線：開始尋找已授權設備',aFound:n=>'自動連線：已授權設備 '+n+' 個',aNone:'自動連線：沒有已授權設備，請先手動連線一次',aNoneMsg:'自動連線需先手動連線一次',waiting:'等待設備…',aFail:'自動連線失敗：',aAdv:'自動連線：等待設備廣播',aNoAdv:'自動連線：不支援 watchAdvertisements，直接連線',aCant:'自動連線無法啟動：',connFail:'連線失敗：',connFailMsg:'連線失敗，請確認手機小程序已斷線、設備已開機並靠近',noLog:'尚無記錄'},
@@ -176,6 +177,7 @@ const I18N = {
   noBt:'This browser does not support Bluetooth. Use Chrome or Edge on Android or desktop, over https.',dropped:'Device disconnected',droppedAuto:'Device disconnected. Waiting to reconnect automatically…',connecting:'Connecting…',noNotify:'Notifications not enabled: ',reply:'Device reply',
   aWaiting:'Auto-connect: already waiting',aNoApi:'Auto-connect: getDevices is not supported in this browser',aNoApiMsg:'Auto-connect is not supported in this browser',aStart:'Auto-connect: looking for permitted devices',aFound:n=>'Auto-connect: '+n+' permitted device(s)',aNone:'Auto-connect: no permitted device, connect manually once first',aNoneMsg:'Connect manually once to enable auto-connect',waiting:'Waiting for device…',aFail:'Auto-connect failed: ',aAdv:'Auto-connect: waiting for device advertisement',aNoAdv:'Auto-connect: watchAdvertisements unsupported, connecting directly',aCant:'Auto-connect could not start: ',connFail:'Connection failed: ',connFailMsg:'Connection failed. Make sure the mini-program is disconnected and the device is on and nearby.',noLog:'No entries yet'}
 };
+const FAVICON = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#111"/><path d="M10 38C10 24 20 14 33 14c12 0 21 8 21 20v10c0 2-1 4-4 4H20c-6 0-10-4-10-10z" fill="@@"/><path d="M30 26h24v13c0 1-1 2-2 2H36c-4 0-6-2-6-6z" fill="#111"/><path d="M33 28h19v5H33z" fill="#fff" opacity=".25"/><rect x="8" y="46" width="48" height="4" rx="2" fill="@@" opacity=".5"/></svg>';
 const THEMES = {lime:'#b6ff00',pink:'#ff7aa8',teal:'#22c1d6',orange:'#ff9a1f'};
 let lang = localStorage.getItem('lang') || (/^zh/i.test(navigator.language) ? 'zh' : 'en');
 let theme = localStorage.getItem('theme'); if (!THEMES[theme]) theme = 'lime';
@@ -192,6 +194,7 @@ function applyLang() {
 }
 function applyTheme() {
   document.documentElement.style.setProperty('--accent', THEMES[theme]);
+  document.querySelector('link[rel=icon]').href = 'data:image/svg+xml,' + encodeURIComponent(FAVICON.replace(/@@/g, THEMES[theme]));
   document.querySelector('meta[name=theme-color]').content = '#111111';
   document.querySelectorAll('.sw').forEach(b => b.classList.toggle('sel', b.dataset.t === theme));
 }
@@ -212,7 +215,13 @@ const log = s => {
   l.textContent += (l.textContent ? '\n' : '') + new Date().toLocaleTimeString() + '  ' + s;
   l.scrollTop = l.scrollHeight;
 };
-const msg = s => { $('msg').textContent = s || ''; };
+let msgTimer;
+const msg = s => {
+  const el = $('msg'); clearTimeout(msgTimer);
+  if (!s) { el.classList.remove('show'); return; }
+  el.textContent = s; el.classList.add('show');
+  msgTimer = setTimeout(() => el.classList.remove('show'), 4500);
+};
 const fanLabel = n => n === 0 ? t('offv') : t('fanN', n);
 const timeLabel = n => n === 0 ? t('offv') : n >= 60 && n % 60 === 0 ? t('hourN', n / 60) : t('minN', n);
 

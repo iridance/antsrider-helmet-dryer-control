@@ -35,7 +35,14 @@
 
 ## 部署
 
-推送到 `main` 後，GitHub Actions 會自動部署 `site/` 到 GitHub Pages。第一次使用請到 repo 的 Settings → Pages，把 Source 設為「GitHub Actions」。
+推送版本 tag（例如 `v1.0.0`）後，GitHub Actions 才會部署 `site/` 到 GitHub Pages，頁尾的 version 即為 tag 版本號；推送 `main` 不會更新頁面。
+
+```
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+第一次使用請到 repo 的 Settings → Pages，把 Source 設為「GitHub Actions」。
 
 ## 聲明
 

@@ -23,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Stamp version
-        run: sed -i "s/id=\"ver\">dev/id=\"ver\">${GITHUB_REF_NAME#v}/" site/index.html
+        run: sed -i "s/id=\"ver\">dev/id=\"ver\">${GITHUB_REF_NAME}/" site/index.html
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

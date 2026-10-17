@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111111">
+<title>NA ANTSRIDER</title>
+<style>
+  :root{color-scheme:dark;--accent:#b6ff00;--on-accent:#111;--bg:#111;--card:#1c1c1c;--chip:#2a2a2a;--text:#eee;--muted:#8a8a8a;--track-off:#444;--knob-off:#bbb;--dot-off:#555;--warn:#d7b24a;--ring:#fff;--log:color-mix(in srgb,var(--accent) 65%,#fff 0%)}
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Noto Sans TC","PingFang TC",sans-serif;display:flex;flex-direction:column;align-items:center}
+  main{width:100%;max-width:460px;padding:20px 16px 8px;flex:1}
+  header{margin-bottom:16px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+  .tools{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+  .lang{border:0;border-radius:10px;height:30px;padding:0 12px;background:var(--chip);color:var(--text);font-weight:700;font-size:13px;cursor:pointer}
+  .swatches{display:flex;gap:8px}
+  .sw{width:22px;height:22px;border-radius:50%;border:2px solid transparent;cursor:pointer;padding:0}
+  .sw.sel{border-color:var(--ring)}
+  .brand{font-size:12px;letter-spacing:.2em;color:var(--accent);font-weight:700}
+  h1{font-size:22px;margin:4px 0 0}
+  .card{background:var(--card);border-radius:16px;padding:16px;margin-bottom:14px}
+  .conn{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .state{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--muted)}
+  .dot{width:10px;height:10px;border-radius:50%;background:var(--dot-off)}
+  .state.on{color:var(--text)}.state.on .dot{background:var(--accent)}
+  .btn{border:0;border-radius:12px;height:42px;padding:0 18px;font-size:15px;font-weight:600;cursor:pointer;background:var(--accent);color:var(--on-accent)}
+  .btn.ghost{background:var(--chip);color:var(--text)}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+  .section-title{display:flex;align-items:baseline;justify-content:space-between;margin:0 0 12px}
+  .section-title h2{font-size:16px;margin:0}
+  .section-title span{font-size:13px;color:var(--muted)}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .chip{border:0;border-radius:12px;height:46px;background:var(--chip);color:var(--text);font-size:15px;cursor:pointer}
+  .chip.sel{background:var(--accent);color:var(--on-accent);font-weight:700}
+  .chip:disabled{opacity:.35;cursor:not-allowed}
+  .toggle{display:flex;align-items:center;justify-content:space-between;gap:16px}.toggle>div{min-width:0}
+  .toggle h2{font-size:16px;margin:0}
+  .toggle.sub{margin-top:12px;padding-top:12px;border-top:1px solid var(--chip)}
+  .toggle.sub h2{font-size:14px;font-weight:600}
+  .toggle.sub p{font-size:12px}
+  .toggle.sub .switch{flex-basis:44px;width:44px;min-width:44px;height:26px;border-radius:13px}
+  .toggle.sub .switch::after{top:3px;left:3px;width:20px;height:20px}
+  .toggle.sub .switch.on::after{left:21px}
+  .toggle p{margin:2px 0 0;font-size:13px;color:var(--muted)}
+  .switch{position:relative;flex:0 0 56px;width:56px;min-width:56px;height:32px;border:0;background:var(--track-off);border-radius:16px;cursor:pointer;transition:.2s;padding:0}
+  .switch::after{content:"";position:absolute;top:4px;left:4px;width:24px;height:24px;border-radius:50%;background:var(--knob-off);transition:.2s}
+  .switch.on{background:var(--accent)}.switch.on::after{left:28px;background:var(--on-accent)}
+  .switch:disabled{opacity:.35;cursor:not-allowed}
+  #msg{font-size:13px;color:var(--warn);margin:-4px 4px 14px}
+  #msg:empty{display:none}
+  details{margin-bottom:14px}
+  summary{cursor:pointer}
+  details.fold{padding:0}
+  details.fold>*:not(summary){margin-left:16px;margin-right:16px}
+  details.fold[open]{padding-bottom:16px}
+  details.fold>summary{list-style:none;padding:16px;margin:0;color:inherit;font-size:inherit;display:flex;align-items:center;justify-content:space-between;gap:8px;user-select:none}
+  details.fold>summary::-webkit-details-marker{display:none}
+  details.fold>summary::after{content:"";width:8px;height:8px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);margin:-3px 2px 0 6px;transition:.2s;flex:none}
+  details.fold[open]>summary::after{transform:rotate(-135deg);margin-top:3px}
+  details.fold>summary.section-title{margin:0}
+  details.fold[open]>summary{padding-bottom:12px}
+  details.fold>summary span{margin-left:auto}
+  details.fold[open] #connNow{display:none}
+  .connright{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:flex-end}
+  .autobox{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);cursor:pointer}
+  .autobox .switch{flex-basis:44px;width:44px;min-width:44px;height:26px;border-radius:13px}
+  .autobox .switch::after{top:3px;left:3px;width:20px;height:20px}
+  .autobox .switch.on::after{left:21px}
+  .hint{margin:8px 0 0;font-size:12px;color:var(--muted)}
+  .hint:empty{display:none}
+  .btn.sm{height:36px;padding:0 14px;font-size:14px}
+  .start-btn{width:100%;height:50px;font-size:16px;margin-top:12px}
+  .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
+  .tile{background:var(--chip);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;text-align:left;border:1px solid transparent;color:var(--text);font:inherit;min-width:0}
+  .tile .tl{font-size:12px;color:var(--muted)}
+  .tile b{font-size:17px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tbtn{cursor:pointer}
+  .tbtn.on{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 16%,var(--chip))}
+  .tbtn.on b{color:var(--accent)}
+  .tbtn:disabled{opacity:.5;cursor:not-allowed}
+  .hint{margin:8px 0 0}
+  #log{font:12px/1.6 ui-monospace,Consolas,monospace;color:var(--log);white-space:pre-wrap;overflow:auto;background:var(--bg);border-radius:12px;padding:10px;height:min(60vh,420px)}
+  .logbtn{display:block;margin:0 auto 14px;border:0;background:none;color:var(--muted);font-size:13px;cursor:pointer;text-decoration:underline;padding:4px}
+  dialog{border:0;border-radius:16px;background:var(--card);color:var(--text);padding:16px;width:min(560px,92vw)}
+  dialog::backdrop{background:rgba(0,0,0,.65)}
+  .mhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+  .mhead h2{font-size:16px;margin:0}
+  footer{width:100%;max-width:460px;padding:16px;text-align:center;font-size:12px;line-height:1.7;color:var(--muted)}
+  footer a{color:inherit}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div>
+      <div class="brand">NA ANTSRIDER</div>
+      <h1 data-i18n="title">安全帽風乾消毒機</h1>
+    </div>
+    <div class="tools">
+      <button class="lang" id="lang" aria-label="Language">EN</button>
+      <div class="swatches" id="swatches"></div>
+    </div>
+  </header>
+
+  <section class="card overview">
+    <div class="conn">
+      <div class="state" id="state"><span class="dot"></span><span id="stateText" data-i18n="off">尚未連線</span></div>
+      <div class="connright">
+        <label class="autobox"><span data-i18n="auto">自動連線</span>
+          <button class="switch" id="auto" role="switch" aria-checked="false"></button>
+        </label>
+        <button class="btn sm" id="connect" data-i18n="connect">連線設備</button>
+        <button class="btn sm ghost" id="disconnect" data-i18n="disconnect" hidden>中斷連線</button>
+      </div>
+    </div>
+    <p class="hint" id="autoHint"></p>
+    <div class="tiles">
+      <div class="tile"><span class="tl" data-i18n="fan">風力</span><b id="tFan">關閉</b></div>
+      <div class="tile"><span class="tl" data-i18n="time">定時</span><b id="tTime">關閉</b></div>
+      <button class="tile tbtn" id="uv" role="switch" aria-checked="false" disabled><span class="tl" data-i18n="uv">紫外線殺菌</span><b id="uvNow">關閉</b></button>
+    </div>
+    <button class="btn start-btn" id="start" data-i18n="start" disabled>開啟</button>
+  </section>
+  <div id="msg"></div>
+
+  <details class="card fold" data-fold="fan" open>
+    <summary class="section-title"><h2 data-i18n="fan">風力</h2><span id="fanNow">關閉</span></summary>
+    <div class="grid" id="fanGrid"></div>
+  </details>
+
+  <details class="card fold" data-fold="time" open>
+    <summary class="section-title"><h2 data-i18n="time">定時</h2><span id="timeNow">關閉</span></summary>
+    <div class="grid" id="timeGrid"></div>
+  </details>
+
+  <button class="logbtn" id="logOpen" data-i18n="logTitle">trace log</button>
+</main>
+
+<dialog id="logModal">
+  <div class="mhead"><h2 data-i18n="logTitle">trace log</h2>
+    <div><button class="btn sm ghost" id="logClear" data-i18n="clear">清除</button> <button class="btn sm ghost" id="logClose" aria-label="Close">✕</button></div>
+  </div>
+  <div id="log"></div>
+</dialog>
+
+<footer>
+  <div>© <span id="year">2026</span> <a href="https://github.com/iridance" target="_blank" rel="noopener">Irice</a>. <span data-i18n="rights">以 MIT 授權釋出。</span></div>
+  <div data-i18n="disclaimer">本專案為非官方開發，與 ANTSRIDER 品牌無關聯。</div>
+</footer>
+
+<script>
+const SERVICE = 0xFFF0, WRITE_CHAR = 0xFFF1, NOTIFY_CHAR = 0xFFF2;
+const FAN_OPTIONS = [0,1,2,3,4,5,6,7,8,9,10];
+const TIME_OPTIONS = [0,5,10,15,20,30,45,60,90,120,180,240];
+const $ = id => document.getElementById(id);
+
+const I18N = {
+ zh: {title:'安全帽風乾消毒機',conn:'連線',off:'尚未連線',connect:'連線設備',disconnect:'中斷連線',auto:'自動連線',autoDesc:'開啟頁面或斷線後，設備在附近時自動連上',autoLock:'請先手動連線一次，成功後即可啟用',clear:'清除',start:'開啟',startNone:'請先選擇風力、定時或紫外線',startSent:'已套用上次的設定',fan:'風力',time:'定時',uv:'紫外線殺菌',logTitle:'trace log',rights:'以 MIT 授權釋出。',disclaimer:'本專案為非官方開發，與 ANTSRIDER 品牌無關聯。',
+  offv:'關閉',onv:'開啟',fanN:n=>n+' 檔',minN:n=>n+' 分鐘',hourN:n=>n+' 小時',connected:'已連線',notConn:'尚未連線設備',sent:'送出 ',sendFail:'送出失敗：',sendFailMsg:'指令送出失敗，請確認設備仍在連線',
+  noBt:'此瀏覽器不支援藍牙連線，請使用 Android 或電腦版的 Chrome／Edge，並以 https 開啟。',dropped:'設備已斷線',droppedAuto:'設備已斷線，等待自動重新連線…',connecting:'連線中…',noNotify:'未啟用通知：',reply:'設備回傳',
+  aWaiting:'自動連線：已在等待中',aNoApi:'自動連線：此瀏覽器不支援 getDevices',aNoApiMsg:'此瀏覽器不支援自動連線',aStart:'自動連線：開始尋找已授權設備',aFound:n=>'自動連線：已授權設備 '+n+' 個',aNone:'自動連線：沒有已授權設備，請先手動連線一次',aNoneMsg:'自動連線需先手動連線一次',waiting:'等待設備…',aFail:'自動連線失敗：',aAdv:'自動連線：等待設備廣播',aNoAdv:'自動連線：不支援 watchAdvertisements，直接連線',aCant:'自動連線無法啟動：',connFail:'連線失敗：',connFailMsg:'連線失敗，請確認手機小程序已斷線、設備已開機並靠近',noLog:'尚無記錄'},
+ en: {title:'Helmet Dryer & Sterilizer',conn:'Connection',off:'Not connected',connect:'Connect',disconnect:'Disconnect',auto:'Auto-connect',autoLock:'Connect manually once to enable this',clear:'Clear',start:'Start',startNone:'Pick a fan level, timer or UV first',startSent:'Applied your last settings',autoDesc:'Connect automatically when the device is nearby, on page load or after a drop',fan:'Fan',time:'Timer',uv:'UV sterilization',logTitle:'trace log',rights:'Released under the MIT License.',disclaimer:'Unofficial project, not affiliated with ANTSRIDER.',
+  offv:'Off',onv:'On',fanN:n=>'Level '+n,minN:n=>n+' min',hourN:n=>n+(n===1?' hr':' hrs'),connected:'Connected',notConn:'Device not connected',sent:'Sent ',sendFail:'Send failed: ',sendFailMsg:'Command failed. Make sure the device is still connected.',
+  noBt:'This browser does not support Bluetooth. Use Chrome or Edge on Android or desktop, over https.',dropped:'Device disconnected',droppedAuto:'Device disconnected. Waiting to reconnect automatically…',connecting:'Connecting…',noNotify:'Notifications not enabled: ',reply:'Device reply',
+  aWaiting:'Auto-connect: already waiting',aNoApi:'Auto-connect: getDevices is not supported in this browser',aNoApiMsg:'Auto-connect is not supported in this browser',aStart:'Auto-connect: looking for permitted devices',aFound:n=>'Auto-connect: '+n+' permitted device(s)',aNone:'Auto-connect: no permitted device, connect manually once first',aNoneMsg:'Connect manually once to enable auto-connect',waiting:'Waiting for device…',aFail:'Auto-connect failed: ',aAdv:'Auto-connect: waiting for device advertisement',aNoAdv:'Auto-connect: watchAdvertisements unsupported, connecting directly',aCant:'Auto-connect could not start: ',connFail:'Connection failed: ',connFailMsg:'Connection failed. Make sure the mini-program is disconnected and the device is on and nearby.',noLog:'No entries yet'}
+};
+const THEMES = {lime:'#b6ff00',pink:'#ff7aa8',teal:'#22c1d6',orange:'#ff9a1f'};
+let lang = localStorage.getItem('lang') || (/^zh/i.test(navigator.language) ? 'zh' : 'en');
+let theme = localStorage.getItem('theme'); if (!THEMES[theme]) theme = 'lime';
+const t = (k, ...a) => { const v = I18N[lang][k]; return typeof v === 'function' ? v(...a) : v; };
+let logEmpty = true;
+function applyLang() {
+  document.documentElement.lang = lang === 'zh' ? 'zh-Hant' : 'en';
+  document.querySelectorAll('[data-i18n]').forEach(e => { e.textContent = t(e.dataset.i18n); });
+  document.title = 'NA ANTSRIDER ' + t('title');
+  $('lang').textContent = lang === 'zh' ? 'EN' : '繁中';
+  $('uv').setAttribute('aria-label', t('uv'));
+  if (logEmpty) $('log').textContent = t('noLog');
+  renderAuto();
+}
+function applyTheme() {
+  document.documentElement.style.setProperty('--accent', THEMES[theme]);
+  document.querySelector('meta[name=theme-color]').content = '#111111';
+  document.querySelectorAll('.sw').forEach(b => b.classList.toggle('sel', b.dataset.t === theme));
+}
+let device, writeChar = null, fan = 0, minutes = 0, uvOn = false;
+try {
+  const saved = JSON.parse(localStorage.getItem('state') || '{}');
+  if (FAN_OPTIONS.includes(saved.fan)) fan = saved.fan;
+  if (TIME_OPTIONS.includes(saved.minutes)) minutes = saved.minutes;
+  uvOn = saved.uvOn === true;
+} catch (e) {}
+
+$('year').textContent = new Date().getFullYear();
+const hex = b => [...new Uint8Array(b.buffer || b)].map(x => x.toString(16).padStart(2,'0')).join(' ');
+const log = s => {
+  const l = $('log');
+  if (logEmpty) { l.textContent = ''; logEmpty = false; }
+  l.textContent += (l.textContent ? '\n' : '') + new Date().toLocaleTimeString() + '  ' + s;
+  l.scrollTop = l.scrollHeight;
+};
+const msg = s => { $('msg').textContent = s || ''; };
+const fanLabel = n => n === 0 ? t('offv') : t('fanN', n);
+const timeLabel = n => n === 0 ? t('offv') : n >= 60 && n % 60 === 0 ? t('hourN', n / 60) : t('minN', n);
+
+function buildGrid(el, options, label, onPick) {
+  el.innerHTML = '';
+  options.forEach(v => {
+    const b = document.createElement('button');
+    b.className = 'chip'; b.dataset.v = v; b.disabled = true;
+    b.textContent = label(v);
+    b.onclick = () => onPick(v);
+    el.appendChild(b);
+  });
+}
+function render(connected) {
+  localStorage.setItem('state', JSON.stringify({ fan, minutes, uvOn }));
+  document.querySelectorAll('#fanGrid .chip').forEach(b => { b.classList.toggle('sel', +b.dataset.v === fan); if (connected !== undefined) b.disabled = !connected; });
+  document.querySelectorAll('#timeGrid .chip').forEach(b => { b.classList.toggle('sel', +b.dataset.v === minutes); if (connected !== undefined) b.disabled = !connected; });
+  $('fanNow').textContent = fanLabel(fan);
+  $('timeNow').textContent = timeLabel(minutes);
+  $('tFan').textContent = fanLabel(fan);
+  $('tTime').textContent = timeLabel(minutes);
+  $('uvNow').textContent = uvOn ? t('onv') : t('offv');
+  $('uv').classList.toggle('on', uvOn);
+  $('uv').setAttribute('aria-checked', uvOn);
+  if (connected !== undefined) { $('uv').disabled = !connected; $('start').disabled = !connected; }
+}
+function setConnected(on, text) {
+  $('state').classList.toggle('on', on);
+  $('stateText').textContent = text || (on ? t('connected') : t('off'));
+  $('connect').hidden = on; $('disconnect').hidden = !on;
+  render(on);
+}
+
+async function send(bytes, desc) {
+  if (!writeChar) { msg(t('notConn')); return false; }
+  const data = new Uint8Array(bytes);
+  try {
+    await writeChar.writeValueWithoutResponse(data);
+    log(t('sent') + desc + '  [' + hex(data) + ']');
+    msg(''); return true;
+  } catch (e) { log(t('sendFail') + e.message); msg(t('sendFailMsg')); return false; }
+}
+async function pickFan(n) { const old = fan; fan = n; render(); if (!await send([0xAA,0x01,n], t('fan') + ' ' + fanLabel(n))) { fan = old; render(); } }
+async function pickTime(n) { const old = minutes; minutes = n; render(); if (!await send([0xAA,0x02,(n>>8)&255,n&255], t('time') + ' ' + timeLabel(n))) { minutes = old; render(); } }
+async function toggleUV() { const old = uvOn; uvOn = !uvOn; render(); if (!await send([0xAA,0x03,0x00,0x00,uvOn?1:0], t('uv') + ' ' + (uvOn ? t('onv') : t('offv')))) { uvOn = old; render(); } }
+
+$('logOpen').onclick = () => { $('logModal').showModal(); $('log').scrollTop = $('log').scrollHeight; };
+$('logClose').onclick = () => $('logModal').close();
+$('logClear').onclick = () => { logEmpty = true; $('log').textContent = t('noLog'); };
+$('logModal').addEventListener('click', e => { if (e.target === $('logModal')) $('logModal').close(); });
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+$('start').onclick = async () => {
+  if (fan === 0 && minutes === 0 && !uvOn) { msg(t('startNone')); return; }
+  if (!await send([0xAA,0x01,fan], t('fan') + ' ' + fanLabel(fan))) return;
+  await sleep(150);
+  if (!await send([0xAA,0x02,(minutes>>8)&255,minutes&255], t('time') + ' ' + timeLabel(minutes))) return;
+  await sleep(150);
+  if (!await send([0xAA,0x03,0x00,0x00,uvOn?1:0], t('uv') + ' ' + (uvOn ? t('onv') : t('offv')))) return;
+  msg(t('startSent'));
+};
+buildGrid($('fanGrid'), FAN_OPTIONS, fanLabel, pickFan);
+buildGrid($('timeGrid'), TIME_OPTIONS, timeLabel, pickTime);
+$('uv').onclick = toggleUV;
+
+if (!navigator.bluetooth) {
+  $('connect').disabled = true;
+  msg(t('noBt'));
+}
+let paired = localStorage.getItem('paired') === '1';
+let autoOn = paired && localStorage.getItem('autoConnect') === '1';
+let manualStop = false, watching = false;
+function renderAuto() {
+  $('auto').classList.toggle('on', autoOn); $('auto').setAttribute('aria-checked', autoOn);
+  $('auto').disabled = !paired;
+  $('autoHint').textContent = '';
+}
+async function connectTo(dev) {
+  device = dev;
+  if (!dev._bound) {
+    dev._bound = true;
+    dev.addEventListener('gattserverdisconnected', () => {
+      writeChar = null; setConnected(false); log(t('dropped'));
+      if (autoOn && !manualStop) { msg(t('droppedAuto')); watchAuto(); } else msg(t('dropped'));
+    });
+  }
+  setConnected(false, t('connecting'));
+  const server = await dev.gatt.connect();
+  const svc = await server.getPrimaryService(SERVICE);
+  writeChar = await svc.getCharacteristic(WRITE_CHAR);
+  try {
+    const n = await svc.getCharacteristic(NOTIFY_CHAR);
+    await n.startNotifications();
+    n.addEventListener('characteristicvaluechanged', e => log(t('reply') + '  [' + hex(e.target.value) + ']'));
+  } catch (e) { log(t('noNotify') + e.message); }
+  if (!paired) { paired = true; localStorage.setItem('paired', '1'); renderAuto(); }
+  setConnected(true, t('connected') + ' ' + (dev.name || ''));
+  msg(''); log(t('connected') + ' ' + dev.name);
+}
+async function watchAuto() {
+  if (!autoOn) return;
+  if (watching) { log(t('aWaiting')); return; }
+  if (!navigator.bluetooth || !navigator.bluetooth.getDevices) { log(t('aNoApi')); msg(t('aNoApiMsg')); return; }
+  log(t('aStart'));
+  watching = true;
+  try {
+    const all = await navigator.bluetooth.getDevices();
+    log(t('aFound', all.length));
+    const devs = all.filter(d => (d.name || '').startsWith('KT6328A-BLE'));
+    if (!devs.length) { log(t('aNone')); msg(t('aNoneMsg')); watching = false; return; }
+    const dev = devs[0];
+    setConnected(false, t('waiting'));
+    const finish = async () => {
+      if (!watching) return;
+      watching = false;
+      try { await connectTo(dev); } catch (e) { log(t('aFail') + e.message); setConnected(false); watchAuto(); }
+    };
+    if (dev.watchAdvertisements) {
+      dev.addEventListener('advertisementreceived', finish, { once: true });
+      await dev.watchAdvertisements();
+      log(t('aAdv'));
+    } else { log(t('aNoAdv')); await finish(); }
+  } catch (e) { watching = false; log(t('aCant') + e.message); setConnected(false); }
+}
+$('auto').onclick = () => {
+  autoOn = !autoOn; localStorage.setItem('autoConnect', autoOn ? '1' : '0'); renderAuto();
+  if (autoOn) { manualStop = false; if (!writeChar) watchAuto(); } else watching = false;
+};
+$('connect').onclick = async () => {
+  try {
+    manualStop = false; watching = false;
+    const dev = await navigator.bluetooth.requestDevice({ filters: [{ namePrefix: 'KT6328A-BLE' }], optionalServices: [SERVICE] });
+    await connectTo(dev);
+  } catch (e) {
+    setConnected(false);
+    if (e.name !== 'NotFoundError') { log(t('connFail') + e.message); msg(t('connFailMsg')); }
+  }
+};
+$('disconnect').onclick = () => { manualStop = true; if (device && device.gatt.connected) device.gatt.disconnect(); };
+Object.keys(THEMES).forEach(k => { const b = document.createElement('button'); b.className = 'sw'; b.dataset.t = k; b.style.background = THEMES[k]; b.setAttribute('aria-label', k); b.onclick = () => { theme = k; localStorage.setItem('theme', k); applyTheme(); }; $('swatches').appendChild(b); });
+$('lang').onclick = () => { lang = lang === 'zh' ? 'en' : 'zh'; localStorage.setItem('lang', lang); applyLang(); buildGrid($('fanGrid'), FAN_OPTIONS, fanLabel, pickFan); buildGrid($('timeGrid'), TIME_OPTIONS, timeLabel, pickTime); setConnected(!!writeChar); };
+document.querySelectorAll('details[data-fold]').forEach(d => {
+  const v = localStorage.getItem('fold-' + d.dataset.fold);
+  if (v !== null) d.open = v === '1';
+  d.addEventListener('toggle', () => localStorage.setItem('fold-' + d.dataset.fold, d.open ? '1' : '0'));
+});
+applyTheme();
+applyLang();
+setConnected(false);
+renderAuto();
+watchAuto();
+</script>
+</body>
+</html>

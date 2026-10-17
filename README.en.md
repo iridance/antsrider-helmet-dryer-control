@@ -11,14 +11,16 @@ Control your NA ANTSRIDER helmet dryer and sterilizer over Bluetooth (Web Blueto
 - Fan: off, or levels 1 to 10
 - Timer: common presets from 5 minutes to 4 hours
 - UV sterilization: on or off
-- Auto-connect, Traditional Chinese / English, and four theme colors (lime, pink, teal, orange)
-- Remembers your usage habits: fan, timer, and UV settings are kept across reloads, and "Start" applies your last combination
+- Auto-connect
+- Traditional Chinese / English switch
+- Four theme colors (lime, pink, teal, orange)
+- Remembers your usage habits: fan, timer, and UV settings are kept, and "Start" applies your last combination
 
 ## Usage
 
 1. Use Chrome or Edge on Android or desktop (Safari on iPhone does not support Web Bluetooth).
 2. Disconnect the WeChat mini-program first. The device accepts only one connection at a time.
-3. Open the link above, press "Connect", and choose `KT6328A-BLE-2.1`.
+3. Open the link above, press "Connect", and choose `KTxxxxx-BLE-2.1`.
 
 ## Protocol
 
@@ -38,17 +40,7 @@ A plain static page with no build step. Open `site/index.html` in Chrome, or run
 
 ## Deployment
 
-GitHub Actions deploys `site/` to GitHub Pages only when a version tag (such as `v1.0.0`) is pushed. The footer version is taken from the tag, and pushing to `main` does not update the page.
-
-```
-git tag v1.0.0
-git push origin v1.0.0
-```
-
-First-time setup:
-
-1. In Settings → Pages, set Source to "GitHub Actions".
-2. In Settings → Environments → github-pages, add a Tag rule `v*` under Deployment branches and tags.
+Pushing a `v*` version tag (such as `v1.0.0`) makes GitHub Actions deploy `site/` to GitHub Pages.
 
 ## Disclaimer
 

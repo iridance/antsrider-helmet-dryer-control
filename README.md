@@ -18,7 +18,7 @@
 
 ## 使用方式
 
-1. 使用 Android 或電腦版的 Chrome／Edge（iPhone 的 Safari 不支援 Web Bluetooth）。
+1. 使用 Android 或電腦版的 Chrome／Edge；iPhone 的 Safari 與 Chrome 不支援 Web Bluetooth，請改用 App Store 的 [Bluefy](https://apps.apple.com/app/bluefy-web-ble-browser/id1492822055) 瀏覽器開啟。
 2. 先斷開手機上微信小程序的連線，設備同一時間只接受一個連線。
 3. 開啟上方網址，按「連線設備」，選擇 `KTxxxxx-BLE-2.1`。
 

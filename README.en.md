@@ -18,7 +18,7 @@ Control your NA ANTSRIDER helmet dryer and sterilizer over Bluetooth (Web Blueto
 
 ## Usage
 
-1. Use Chrome or Edge on Android or desktop (Safari on iPhone does not support Web Bluetooth).
+1. Use Chrome or Edge on Android or desktop. Safari and Chrome on iPhone do not support Web Bluetooth, so open the page in the [Bluefy](https://apps.apple.com/app/bluefy-web-ble-browser/id1492822055) browser from the App Store instead.
 2. Disconnect the WeChat mini-program first. The device accepts only one connection at a time.
 3. Open the link above, press "Connect", and choose `KTxxxxx-BLE-2.1`.
 

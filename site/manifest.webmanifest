@@ -25,5 +25,33 @@
    "type": "image/png",
    "purpose": "maskable"
   }
+ ],
+ "shortcuts": [
+  {
+   "name": "開啟",
+   "short_name": "開啟",
+   "description": "連線並開啟風乾消毒機",
+   "url": "./?action=start",
+   "icons": [
+    {
+     "src": "icon-192.png",
+     "sizes": "192x192",
+     "type": "image/png"
+    }
+   ]
+  },
+  {
+   "name": "關閉",
+   "short_name": "關閉",
+   "description": "連線並關閉風乾消毒機",
+   "url": "./?action=stop",
+   "icons": [
+    {
+     "src": "icon-192.png",
+     "sizes": "192x192",
+     "type": "image/png"
+    }
+   ]
+  }
  ]
 }

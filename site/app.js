@@ -170,6 +170,7 @@ async function connectTo(dev) {
   if (!paired) { paired = true; localStorage.setItem('paired', '1'); renderAuto(); }
   setConnected(true, t('connected') + ' ' + (dev.name || ''));
   msg(''); log(t('connected') + ' ' + dev.name);
+  runPending();
 }
 async function watchAuto() {
   if (!autoOn) return;
@@ -220,6 +221,17 @@ document.querySelectorAll('details[data-fold]').forEach(d => {
 });
 applyTheme();
 applyLang();
+// manifest shortcuts: ?action=start|stop runs once connected
+let pendingAction = new URLSearchParams(location.search).get('action');
+if (pendingAction !== 'start' && pendingAction !== 'stop') pendingAction = null;
+function runPending() {
+  if (!pendingAction) return;
+  const a = pendingAction; pendingAction = null;
+  history.replaceState(null, '', location.pathname);
+  if (a === 'start' && !running) $('start').click();
+  else if (a === 'stop') { running = true; $('start').click(); }
+}
+if (pendingAction && paired && !autoOn) autoOn = true;
 setConnected(false);
 renderAuto();
 watchAuto();

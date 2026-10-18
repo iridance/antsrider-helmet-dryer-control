@@ -92,3 +92,4 @@ footer a .gh{vertical-align:-2px;margin-right:4px}
 .hint[hidden]{display:none}.hint .ms{color:var(--accent)}.hint span{flex:1}
 .hint .btn.sm{height:32px;padding:0 14px;font-size:13px;white-space:nowrap}
 .hint .x{border:0;background:none;color:var(--muted);cursor:pointer;padding:0;display:flex}
+#fanGrid{grid-template-columns:repeat(5,1fr)}

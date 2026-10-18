@@ -1,5 +1,5 @@
 const SERVICE = 0xFFF0, WRITE_CHAR = 0xFFF1, NOTIFY_CHAR = 0xFFF2;
-const FAN_OPTIONS = [0,1,2,3,4,5,6,7,8,9,10];
+const FAN_OPTIONS = [1,2,3,4,5,6,7,8,9,10];
 const TIME_OPTIONS = [0,5,10,15,20,30,45,60,90,120,180,240];
 const $ = id => document.getElementById(id);
 

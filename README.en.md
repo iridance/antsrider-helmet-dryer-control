@@ -6,6 +6,8 @@ Control your NA ANTSRIDER helmet dryer and sterilizer over Bluetooth (Web Blueto
 
 **Use it online: <https://iridance.github.io/antsrider-helmet-dryer-control/>**
 
+<img src="docs/screenshot-en.png" alt="Screenshot" width="300">
+
 ## Features
 
 - Fan: off, or levels 1 to 10

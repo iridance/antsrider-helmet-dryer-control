@@ -6,6 +6,8 @@
 
 **線上使用：<https://iridance.github.io/antsrider-helmet-dryer-control/>**
 
+<img src="docs/screenshot-zh.png" alt="操作畫面" width="300">
+
 ## 功能
 
 - 風力：關閉，或 1 到 10 檔

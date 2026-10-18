@@ -4,11 +4,11 @@ const TIME_OPTIONS = [0,5,10,15,20,30,45,60,90,120,180,240];
 const $ = id => document.getElementById(id);
 
 const I18N = {
- zh: {title:'安全帽風乾消毒機',conn:'連線',off:'尚未連線',connect:'連線設備',disconnect:'中斷連線',auto:'自動',autoDesc:'開啟頁面或斷線後，設備在附近時自動連上',autoLock:'請先手動連線一次，成功後即可啟用',clear:'清除',start:'開啟',stop:'關閉',stopped:'已關閉',startNone:'請先選擇風力、定時或紫外線',startSent:'已套用上次的設定',fan:'風力',time:'定時',uv:'紫外線殺菌',uvS:'紫外線',logTitle:'trace log',rights:'以 MIT 授權釋出。',disclaimer:'本專案為非官方開發，與 ANTSRIDER 品牌無關聯。',
+ zh: {title:'安全帽風乾消毒機',conn:'連線',off:'尚未連線',connect:'連線設備',disconnect:'中斷連線',auto:'自動',autoDesc:'開啟頁面或斷線後，設備在附近時自動連上',autoLock:'請先手動連線一次，成功後即可啟用',clear:'清除',start:'開啟',stop:'關閉',stopped:'已關閉',startNone:'請先選擇風力、定時或紫外線',startSent:'已套用上次的設定',fan:'風力',time:'定時',uv:'紫外線殺菌',uvS:'紫外線',logTitle:'trace log',rights:'以 MIT 授權釋出。',hintInstall:'把控制器安裝成應用程式，之後可直接從桌面開啟',hintInstallBtn:'安裝',hintIos:'iPhone 的 Safari 不支援藍牙，請改用 Bluefy 瀏覽器開啟',hintIosBtn:'下載 Bluefy',disclaimer:'本專案為非官方開發，與 ANTSRIDER 品牌無關聯。',
   offv:'關閉',onv:'開啟',fanN:n=>n+' 檔',minN:n=>n+' 分鐘',hourN:n=>n+' 小時',connected:'已連線',notConn:'尚未連線設備',sent:'送出 ',sendFail:'送出失敗：',sendFailMsg:'指令送出失敗，請確認設備仍在連線',
   noBt:'此瀏覽器不支援藍牙連線，請使用 Android 或電腦版的 Chrome／Edge，並以 https 開啟。',dropped:'設備已斷線',droppedAuto:'設備已斷線，等待自動重新連線…',connecting:'連線中…',noNotify:'未啟用通知：',reply:'設備回傳',
   aWaiting:'自動連線：已在等待中',aNoApi:'自動連線：此瀏覽器不支援 getDevices',aNoApiMsg:'此瀏覽器不支援自動連線',aStart:'自動連線：開始尋找已授權設備',aFound:n=>'自動連線：已授權設備 '+n+' 個',aNone:'自動連線：沒有已授權設備，請先手動連線一次',aNoneMsg:'自動連線需先手動連線一次',waiting:'等待設備…',aFail:'自動連線失敗：',aAdv:'自動連線：等待設備廣播',aNoAdv:'自動連線：不支援 watchAdvertisements，直接連線',aCant:'自動連線無法啟動：',connFail:'連線失敗：',connFailMsg:'連線失敗，請確認手機小程序已斷線、設備已開機並靠近',noLog:'尚無記錄'},
- en: {title:'Helmet Dryer & Sterilizer',conn:'Connection',off:'Not connected',connect:'Connect',disconnect:'Disconnect',auto:'Auto-connect',autoLock:'Connect manually once to enable this',clear:'Clear',start:'Start',stop:'Stop',stopped:'Turned off',startNone:'Pick a fan level, timer or UV first',startSent:'Applied your last settings',autoDesc:'Connect automatically when the device is nearby, on page load or after a drop',fan:'Fan',time:'Timer',uv:'UV light',uvS:'UV',logTitle:'trace log',rights:'Released under the MIT License.',disclaimer:'Unofficial project, not affiliated with ANTSRIDER.',
+ en: {title:'Helmet Dryer & Sterilizer',conn:'Connection',off:'Not connected',connect:'Connect',disconnect:'Disconnect',auto:'Auto-connect',autoLock:'Connect manually once to enable this',clear:'Clear',start:'Start',stop:'Stop',stopped:'Turned off',startNone:'Pick a fan level, timer or UV first',startSent:'Applied your last settings',autoDesc:'Connect automatically when the device is nearby, on page load or after a drop',fan:'Fan',time:'Timer',uv:'UV light',uvS:'UV',logTitle:'trace log',rights:'Released under the MIT License.',hintInstall:'Install this controller as an app to open it from your home screen',hintInstallBtn:'Install',hintIos:'Safari on iPhone has no Bluetooth support. Open this page in the Bluefy browser',hintIosBtn:'Get Bluefy',disclaimer:'Unofficial project, not affiliated with ANTSRIDER.',
   offv:'Off',onv:'On',fanN:n=>'Level '+n,minN:n=>n+' min',hourN:n=>n+(n===1?' hr':' hrs'),connected:'Connected',notConn:'Device not connected',sent:'Sent ',sendFail:'Send failed: ',sendFailMsg:'Command failed. Make sure the device is still connected.',
   noBt:'This browser does not support Bluetooth. Use Chrome or Edge on Android or desktop, over https.',dropped:'Device disconnected',droppedAuto:'Device disconnected. Waiting to reconnect automatically…',connecting:'Connecting…',noNotify:'Notifications not enabled: ',reply:'Device reply',
   aWaiting:'Auto-connect: already waiting',aNoApi:'Auto-connect: getDevices is not supported in this browser',aNoApiMsg:'Auto-connect is not supported in this browser',aStart:'Auto-connect: looking for permitted devices',aFound:n=>'Auto-connect: '+n+' permitted device(s)',aNone:'Auto-connect: no permitted device, connect manually once first',aNoneMsg:'Connect manually once to enable auto-connect',waiting:'Waiting for device…',aFail:'Auto-connect failed: ',aAdv:'Auto-connect: waiting for device advertisement',aNoAdv:'Auto-connect: watchAdvertisements unsupported, connecting directly',aCant:'Auto-connect could not start: ',connFail:'Connection failed: ',connFailMsg:'Connection failed. Make sure the mini-program is disconnected and the device is on and nearby.',noLog:'No entries yet'}
@@ -225,3 +225,27 @@ renderAuto();
 watchAuto();
 
 if ('serviceWorker' in navigator && location.protocol !== 'file:') navigator.serviceWorker.register('sw.js').catch(() => {});
+
+// install / Bluefy hint
+(() => {
+  const box = $('hint'), btn = $('hintBtn'), text = $('hintText');
+  const q = new URLSearchParams(location.search).get('hint');
+  const ios = q === 'ios' || /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const bluefy = /Bluefy/i.test(navigator.userAgent) || !!navigator.bluetooth;
+  const standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+  if (localStorage.getItem('hintOff') || standalone) return;
+  let deferred = null;
+  const show = (kind) => {
+    const set = () => { text.textContent = t(kind === 'ios' ? 'hintIos' : 'hintInstall'); btn.textContent = t(kind === 'ios' ? 'hintIosBtn' : 'hintInstallBtn'); };
+    set(); box.hidden = false; document.querySelectorAll('#lang').forEach(b => b.addEventListener('click', set));
+    btn.onclick = async () => {
+      if (kind === 'ios') { location.href = 'https://apps.apple.com/app/bluefy-web-ble-browser/id1492822055'; return; }
+      if (!deferred) return; deferred.prompt(); await deferred.userChoice; deferred = null; box.hidden = true;
+    };
+  };
+  $('hintX').onclick = () => { box.hidden = true; localStorage.setItem('hintOff', '1'); };
+  if (ios && (q === 'ios' || !bluefy)) show('ios');
+  else if (q === 'install') show('install');
+  window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferred = e; if (!ios) show('install'); });
+  window.addEventListener('appinstalled', () => { box.hidden = true; });
+})();

@@ -93,3 +93,18 @@ footer a .gh{vertical-align:-2px;margin-right:4px}
 .hint .btn.sm{height:32px;padding:0 14px;font-size:13px;white-space:nowrap}
 .hint .x{border:0;background:none;color:var(--muted);cursor:pointer;padding:0;display:flex}
 #fanGrid{grid-template-columns:repeat(5,1fr)}
+#helpBody{white-space:pre-line;font-size:14px;line-height:1.7;margin-top:8px}#helpBody code{background:var(--chip);padding:1px 6px;border-radius:6px}
+.switch.locked{opacity:.35;cursor:help}
+#helpAct{margin-top:12px}#helpAct[hidden]{display:none}
+#helpAct{display:flex;gap:8px;align-items:center}#helpAct code{flex:1;min-width:0;overflow-x:auto;white-space:nowrap;background:var(--chip);padding:8px 10px;border-radius:8px;font-size:12px;user-select:all}
+#helpAct{position:relative;display:block}
+#helpAct code{display:block;font-family:ui-monospace,SFMono-Regular,Consolas,Menlo,monospace;font-size:13px;line-height:1.6;background:#0a0a0a;color:var(--accent);border:1px solid var(--chip);border-radius:10px;padding:12px 76px 12px 14px;overflow-x:auto;white-space:nowrap;user-select:all}
+#helpAct .btn{position:absolute;top:50%;right:8px;transform:translateY(-50%);height:28px;padding:0 12px;font-size:12px;background:var(--chip);color:var(--text)}
+#helpAct[hidden]{display:none}
+#helpAct code{padding:12px 14px}
+#helpAct .btn{position:static;transform:none;display:block;margin:8px 0 0 auto;height:32px;padding:0 16px;font-size:13px}
+#helpAct{display:block;position:static}
+#helpAct .codeblock{background:#0a0a0a;border:1px solid var(--chip);border-radius:10px;overflow:hidden}
+#helpAct .cbar{display:flex;align-items:center;justify-content:space-between;padding:6px 8px 6px 14px;background:var(--chip);font-size:12px;color:var(--muted)}
+#helpAct .cbar .btn{position:static;transform:none;display:block;margin:0;height:26px;padding:0 12px;font-size:12px;background:transparent;color:var(--text);border:1px solid var(--muted)}
+#helpAct code{display:block;background:transparent;border:0;border-radius:0;padding:12px 14px;font-family:ui-monospace,SFMono-Regular,Consolas,Menlo,monospace;font-size:13px;color:var(--accent);overflow-x:auto;white-space:nowrap;user-select:all}

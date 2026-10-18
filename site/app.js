@@ -4,11 +4,11 @@ const TIME_OPTIONS = [0,5,10,15,20,30,45,60,90,120,180,240];
 const $ = id => document.getElementById(id);
 
 const I18N = {
- zh: {title:'安全帽風乾消毒機',conn:'連線',off:'尚未連線',connect:'連線設備',disconnect:'中斷連線',auto:'自動',autoDesc:'開啟頁面或斷線後，設備在附近時自動連上',autoLock:'請先手動連線一次，成功後即可啟用',clear:'清除',start:'開啟',stop:'關閉',stopped:'已關閉',startNone:'請先選擇風力、定時或紫外線',startSent:'已套用上次的設定',fan:'風力',time:'定時',uv:'紫外線殺菌',uvS:'紫外線',logTitle:'trace log',rights:'以 MIT 授權釋出。',hintInstall:'把控制器安裝成應用程式，之後可直接從桌面開啟',hintInstallBtn:'安裝',hintIos:'iPhone 的 Safari 不支援藍牙，請改用 Bluefy 瀏覽器開啟',hintIosBtn:'下載 Bluefy',disclaimer:'本專案為非官方開發，與 ANTSRIDER 品牌無關聯。',
+ zh: {title:'安全帽風乾消毒機',conn:'連線',off:'尚未連線',connect:'連線設備',disconnect:'中斷連線',auto:'自動',autoDesc:'開啟頁面或斷線後，設備在附近時自動連上',autoLock:'請先手動連線一次，成功後即可啟用',clear:'清除',start:'開啟',stop:'關閉',stopped:'已關閉',startNone:'請先選擇風力、定時或紫外線',startSent:'已套用上次的設定',fan:'風力',time:'定時',uv:'紫外線殺菌',uvS:'紫外線',logTitle:'trace log',helpTitle:'自動連線說明',copy:'複製',copied:'已複製',helpNoApi:'目前的瀏覽器尚未開啟「取得已授權設備」功能，所以無法自動連線。\n\n開啟方式：\n1. 先把 Chrome 或 Edge 更新到最新版。\n2. 仍不行時，複製下方網址貼到網址列，將該旗標改成 Enabled 並重新啟動瀏覽器。\n3. iPhone 的 Safari 不支援藍牙，請改用 Bluefy 瀏覽器。\n\n不開啟也能用，只要每次按「連線設備」手動連線即可。',helpNoPair:'請先手動連線一次，成功後即可啟用自動連線。',rights:'以 MIT 授權釋出。',hintInstall:'把控制器安裝成應用程式，之後可直接從桌面開啟',hintInstallBtn:'安裝',hintIos:'iPhone 的 Safari 不支援藍牙，請改用 Bluefy 瀏覽器開啟',hintIosBtn:'下載 Bluefy',disclaimer:'本專案為非官方開發，與 ANTSRIDER 品牌無關聯。',
   offv:'關閉',onv:'開啟',fanN:n=>n+' 檔',minN:n=>n+' 分鐘',hourN:n=>n+' 小時',connected:'已連線',notConn:'尚未連線設備',sent:'送出 ',sendFail:'送出失敗：',sendFailMsg:'指令送出失敗，請確認設備仍在連線',
   noBt:'此瀏覽器不支援藍牙連線，請使用 Android 或電腦版的 Chrome／Edge，並以 https 開啟。',dropped:'設備已斷線',droppedAuto:'設備已斷線，等待自動重新連線…',connecting:'連線中…',noNotify:'未啟用通知：',reply:'設備回傳',
   aWaiting:'自動連線：已在等待中',aNoApi:'自動連線：此瀏覽器不支援 getDevices',aNoApiMsg:'此瀏覽器不支援自動連線',aStart:'自動連線：開始尋找已授權設備',aFound:n=>'自動連線：已授權設備 '+n+' 個',aNone:'自動連線：沒有已授權設備，請先手動連線一次',aNoneMsg:'自動連線需先手動連線一次',waiting:'等待設備…',aFail:'自動連線失敗：',aAdv:'自動連線：等待設備廣播',aNoAdv:'自動連線：不支援 watchAdvertisements，直接連線',aCant:'自動連線無法啟動：',connFail:'連線失敗：',connFailMsg:'連線失敗，請確認手機小程序已斷線、設備已開機並靠近',noLog:'尚無記錄'},
- en: {title:'Helmet Dryer & Sterilizer',conn:'Connection',off:'Not connected',connect:'Connect',disconnect:'Disconnect',auto:'Auto-connect',autoLock:'Connect manually once to enable this',clear:'Clear',start:'Start',stop:'Stop',stopped:'Turned off',startNone:'Pick a fan level, timer or UV first',startSent:'Applied your last settings',autoDesc:'Connect automatically when the device is nearby, on page load or after a drop',fan:'Fan',time:'Timer',uv:'UV light',uvS:'UV',logTitle:'trace log',rights:'Released under the MIT License.',hintInstall:'Install this controller as an app to open it from your home screen',hintInstallBtn:'Install',hintIos:'Safari on iPhone has no Bluetooth support. Open this page in the Bluefy browser',hintIosBtn:'Get Bluefy',disclaimer:'Unofficial project, not affiliated with ANTSRIDER.',
+ en: {title:'Helmet Dryer & Sterilizer',conn:'Connection',off:'Not connected',connect:'Connect',disconnect:'Disconnect',auto:'Auto-connect',autoLock:'Connect manually once to enable this',clear:'Clear',start:'Start',stop:'Stop',stopped:'Turned off',startNone:'Pick a fan level, timer or UV first',startSent:'Applied your last settings',autoDesc:'Connect automatically when the device is nearby, on page load or after a drop',fan:'Fan',time:'Timer',uv:'UV light',uvS:'UV',logTitle:'trace log',helpTitle:'About auto-connect',copy:'Copy',copied:'Copied',helpNoApi:'This browser has not enabled the "get authorized devices" feature, so auto-connect cannot work.\n\nHow to enable it:\n1. Update Chrome or Edge to the latest version.\n2. If it still fails, copy the address below into the address bar, set the flag to Enabled and restart the browser.\n3. Safari on iPhone has no Bluetooth support. Use the Bluefy browser instead.\n\nThe page works without it: just press Connect each time.',helpNoPair:'Connect manually once first, then auto-connect can be enabled.',rights:'Released under the MIT License.',hintInstall:'Install this controller as an app to open it from your home screen',hintInstallBtn:'Install',hintIos:'Safari on iPhone has no Bluetooth support. Open this page in the Bluefy browser',hintIosBtn:'Get Bluefy',disclaimer:'Unofficial project, not affiliated with ANTSRIDER.',
   offv:'Off',onv:'On',fanN:n=>'Level '+n,minN:n=>n+' min',hourN:n=>n+(n===1?' hr':' hrs'),connected:'Connected',notConn:'Device not connected',sent:'Sent ',sendFail:'Send failed: ',sendFailMsg:'Command failed. Make sure the device is still connected.',
   noBt:'This browser does not support Bluetooth. Use Chrome or Edge on Android or desktop, over https.',dropped:'Device disconnected',droppedAuto:'Device disconnected. Waiting to reconnect automatically…',connecting:'Connecting…',noNotify:'Notifications not enabled: ',reply:'Device reply',
   aWaiting:'Auto-connect: already waiting',aNoApi:'Auto-connect: getDevices is not supported in this browser',aNoApiMsg:'Auto-connect is not supported in this browser',aStart:'Auto-connect: looking for permitted devices',aFound:n=>'Auto-connect: '+n+' permitted device(s)',aNone:'Auto-connect: no permitted device, connect manually once first',aNoneMsg:'Connect manually once to enable auto-connect',waiting:'Waiting for device…',aFail:'Auto-connect failed: ',aAdv:'Auto-connect: waiting for device advertisement',aNoAdv:'Auto-connect: watchAdvertisements unsupported, connecting directly',aCant:'Auto-connect could not start: ',connFail:'Connection failed: ',connFailMsg:'Connection failed. Make sure the mini-program is disconnected and the device is on and nearby.',noLog:'No entries yet'}
@@ -142,11 +142,12 @@ if (!navigator.bluetooth) {
   msg(t('noBt'));
 }
 let paired = localStorage.getItem('paired') === '1';
-let autoOn = paired && localStorage.getItem('autoConnect') === '1';
+const autoSupported = !!(navigator.bluetooth && navigator.bluetooth.getDevices);
+let autoOn = autoSupported && paired && localStorage.getItem('autoConnect') === '1';
 let manualStop = false, watching = false;
 function renderAuto() {
   $('auto').classList.toggle('on', autoOn); $('auto').setAttribute('aria-checked', autoOn);
-  $('auto').disabled = !paired;
+  $('auto').classList.toggle('locked', !paired || !autoSupported);
   $('autoHint').textContent = '';
 }
 async function connectTo(dev) {
@@ -175,7 +176,7 @@ async function connectTo(dev) {
 async function watchAuto() {
   if (!autoOn) return;
   if (watching) { log(t('aWaiting')); return; }
-  if (!navigator.bluetooth || !navigator.bluetooth.getDevices) { log(t('aNoApi')); msg(t('aNoApiMsg')); return; }
+  if (!autoSupported) { log(t('aNoApi')); msg(t('aNoApiMsg')); autoOn = false; renderAuto(); return; }
   log(t('aStart'));
   watching = true;
   try {
@@ -197,7 +198,24 @@ async function watchAuto() {
     } else { log(t('aNoAdv')); await finish(); }
   } catch (e) { watching = false; log(t('aCant') + e.message); setConnected(false); }
 }
+$('helpClose').onclick = () => $('helpModal').close();
+$('helpModal').addEventListener('click', e => { if (e.target === $('helpModal')) $('helpModal').close(); });
+const FLAG = 'enable-web-bluetooth-new-permissions-backend';
+const isEdge = /Edg\//.test(navigator.userAgent);
+const flagUrl = () => (isEdge ? 'edge' : 'chrome') + '://flags/#' + FLAG;
+function showHelp(k) {
+  $('helpTitle').textContent = t('helpTitle'); $('helpBody').textContent = t(k);
+  $('helpAct').hidden = k !== 'helpNoApi'; $('helpCopy').textContent = t('copy');
+  $('helpUrl').textContent = flagUrl();
+  $('helpModal').showModal();
+}
+$('helpCopy').onclick = async () => {
+  try { await navigator.clipboard.writeText(flagUrl()); $('helpCopy').textContent = t('copied'); setTimeout(() => { $('helpCopy').textContent = t('copy'); }, 2000); }
+  catch (e) { const r = document.createRange(); r.selectNodeContents($('helpUrl')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+};
 $('auto').onclick = () => {
+  if (!autoSupported) { showHelp('helpNoApi'); return; }
+  if (!paired) { showHelp('helpNoPair'); return; }
   autoOn = !autoOn; localStorage.setItem('autoConnect', autoOn ? '1' : '0'); renderAuto();
   if (autoOn) { manualStop = false; if (!writeChar) watchAuto(); } else watching = false;
 };
@@ -231,7 +249,7 @@ function runPending() {
   if (a === 'start' && !running) $('start').click();
   else if (a === 'stop') { running = true; $('start').click(); }
 }
-if (pendingAction && paired && !autoOn) autoOn = true;
+if (pendingAction && paired && autoSupported && !autoOn) autoOn = true;
 setConnected(false);
 renderAuto();
 watchAuto();

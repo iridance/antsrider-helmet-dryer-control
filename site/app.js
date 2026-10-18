@@ -120,7 +120,7 @@ $('start').onclick = async () => {
     running = true; render();
     let ok = true;
     if (minutes > 0) ok = await send([0xAA,0x02,(minutes>>8)&255,minutes&255], t('time') + ' ' + timeLabel(minutes)) && await sleep(200, true);
-    if (ok && uvOn) ok = await send([0xAA,0x03,0x00,0x00,1], t('uv') + ' ' + t('onv')) && await sleep(200, true);
+    if (ok) ok = await send([0xAA,0x03,0x00,0x00,uvOn ? 1 : 0], t('uv') + ' ' + (uvOn ? t('onv') : t('offv'))) && await sleep(200, true);
     if (ok) ok = await send([0xAA,0x01,fan], t('fan') + ' ' + fanLabel(fan));
     if (!ok) { running = false; render(); return; }
     msg(t('startSent'));

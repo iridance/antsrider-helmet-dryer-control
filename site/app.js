@@ -13,7 +13,6 @@ const I18N = {
   noBt:'This browser does not support Bluetooth. Use Chrome or Edge on Android or desktop, over https.',dropped:'Device disconnected',droppedAuto:'Device disconnected. Waiting to reconnect automatically…',connecting:'Connecting…',noNotify:'Notifications not enabled: ',reply:'Device reply',
   aWaiting:'Auto-connect: already waiting',aNoApi:'Auto-connect: getDevices is not supported in this browser',aNoApiMsg:'Auto-connect is not supported in this browser',aStart:'Auto-connect: looking for permitted devices',aFound:n=>'Auto-connect: '+n+' permitted device(s)',aNone:'Auto-connect: no permitted device, connect manually once first',aNoneMsg:'Connect manually once to enable auto-connect',waiting:'Waiting for device…',aFail:'Auto-connect failed: ',aAdv:'Auto-connect: waiting for device advertisement',aNoAdv:'Auto-connect: watchAdvertisements unsupported, connecting directly',aCant:'Auto-connect could not start: ',connFail:'Connection failed: ',connFailMsg:'Connection failed. Make sure the mini-program is disconnected and the device is on and nearby.',noLog:'No entries yet'}
 };
-const FAVICON = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#111"/><path d="M10 38C10 24 20 14 33 14c12 0 21 8 21 20v10c0 2-1 4-4 4H20c-6 0-10-4-10-10z" fill="@@"/><path d="M30 26h24v13c0 1-1 2-2 2H36c-4 0-6-2-6-6z" fill="#111"/><path d="M33 28h19v5H33z" fill="#fff" opacity=".25"/><rect x="8" y="46" width="48" height="4" rx="2" fill="@@" opacity=".5"/></svg>';
 const THEMES = {lime:'#b6ff00',pink:'#ff7aa8',teal:'#22c1d6',orange:'#ff9a1f'};
 let lang = localStorage.getItem('lang') || (/^zh/i.test(navigator.language) ? 'zh' : 'en');
 let theme = localStorage.getItem('theme'); if (!THEMES[theme]) theme = 'lime';
@@ -30,7 +29,6 @@ function applyLang() {
 }
 function applyTheme() {
   document.documentElement.style.setProperty('--accent', THEMES[theme]);
-  document.querySelector('link[rel=icon]').href = 'data:image/svg+xml,' + encodeURIComponent(FAVICON.replace(/@@/g, THEMES[theme]));
   document.querySelector('meta[name=theme-color]').content = '#111111';
   document.querySelectorAll('.sw').forEach(b => b.classList.toggle('sel', b.dataset.t === theme));
 }

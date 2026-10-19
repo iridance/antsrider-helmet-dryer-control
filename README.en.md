@@ -2,7 +2,7 @@
 
 [繁體中文](README.md)
 
-Control your NA ANTSRIDER helmet dryer and sterilizer over Bluetooth (Web Bluetooth) straight from the browser, with no WeChat mini-program needed.
+A replacement for the official WeChat mini-program: control your NA ANTSRIDER helmet dryer and sterilizer over Bluetooth (Web Bluetooth) straight from the browser.
 
 **Use it online: <https://iridance.github.io/antsrider-helmet-dryer-control/>**
 
@@ -11,9 +11,9 @@ Control your NA ANTSRIDER helmet dryer and sterilizer over Bluetooth (Web Blueto
 ## Features
 
 - Fan: off, or levels 1 to 10
-- Timer: common presets from 5 minutes to 4 hours
+- Timer: no limit, or common presets from 5 minutes to 4 hours
 - UV sterilization: on or off
-- Auto-connect
+- Auto-connect: connects automatically when the device is nearby, on page load or after a drop (see limits below)
 - Traditional Chinese / English switch
 - Four theme colors (lime, pink, teal, orange)
 - Remembers your usage habits: fan, timer, and UV settings are kept, and "Start" applies your last combination
@@ -23,6 +23,13 @@ Control your NA ANTSRIDER helmet dryer and sterilizer over Bluetooth (Web Blueto
 1. Use Chrome or Edge on Android or desktop. Safari and Chrome on iPhone do not support Web Bluetooth, so open the page in the [Bluefy](https://apps.apple.com/app/bluefy-web-ble-browser/id1492822055) browser from the App Store instead.
 2. Disconnect the WeChat mini-program first. The device accepts only one connection at a time.
 3. Open the link above, press "Connect", and choose `KTxxxxx-BLE-2.1`.
+
+### Auto-connect limits
+
+- You must connect manually and authorize the device once before you can turn it on.
+- The browser must support the "get authorized devices" feature. If Chrome or Edge does not, enable `chrome://flags/#enable-web-bluetooth-new-permissions-backend` (`edge://flags/...` for Edge). The page shows how when it is unsupported.
+- The page must stay open; it does not reconnect in the background after the tab or browser is closed.
+- It cannot connect while the mini-program or another device is connected, since the device accepts only one connection at a time.
 
 ## Protocol
 
@@ -43,6 +50,10 @@ A plain static page with no build step. Open `site/index.html` in Chrome, or run
 ## Deployment
 
 Pushing a `v*` version tag (such as `v1.0.0`) makes GitHub Actions deploy `site/` to GitHub Pages.
+
+## Privacy
+
+This project collects no data: no accounts, no tracking or analytics, and nothing is sent to any server. Your settings are stored only in your own browser's local storage.
 
 ## Disclaimer
 

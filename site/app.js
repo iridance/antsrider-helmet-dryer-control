@@ -13,6 +13,10 @@ const I18N = {
   noBt:'This browser does not support Bluetooth. Use Chrome or Edge on Android or desktop, over https.',dropped:'Device disconnected',droppedAuto:'Device disconnected. Waiting to reconnect automatically…',connecting:'Connecting…',noNotify:'Notifications not enabled: ',reply:'Device reply',
   aWaiting:'Auto-connect: already waiting',aNoApi:'Auto-connect: getDevices is not supported in this browser',aNoApiMsg:'Auto-connect is not supported in this browser',aStart:'Auto-connect: looking for permitted devices',aFound:n=>'Auto-connect: '+n+' permitted device(s)',aNone:'Auto-connect: no permitted device, connect manually once first',aNoneMsg:'Connect manually once to enable auto-connect',waiting:'Waiting for device…',aFail:'Auto-connect failed: ',aAdv:'Auto-connect: waiting for device advertisement',aNoAdv:'Auto-connect: watchAdvertisements unsupported, connecting directly',aCant:'Auto-connect could not start: ',connFail:'Connection failed: ',connFailMsg:'Connection failed. Make sure the mini-program is disconnected and the device is on and nearby.',noLog:'No entries yet'}
 };
+const FAVICON = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="4 3.6 56 56"><path d="M18 43v4c0 2.5 2 4.5 4.5 4.5h19c2.5 0 4.5-2 4.5-4.5V43" fill="none" stroke="#4a5058" stroke-width="3.6" stroke-linejoin="round"/><path d="M11 16c0-3 2.5-5 5.5-5h31c3 0 5.5 2 5.5 5v23H11z" fill="@@"/><path d="M11 16c0-3 2.5-5 5.5-5h31c3 0 5.5 2 5.5 5v2H11z" fill="@L"/><path d="M48 18h5v21h-5z" fill="#fff" opacity=".18"/><rect x="18" y="10" width="28" height="4" rx="2" fill="#4a5058"/><rect x="21" y="11.3" width="22" height="1.4" rx=".7" fill="#6d747b"/><path d="M19.65478515625 21.4779296875H23.43408203125L28.20654296875 30.4779296875V21.4779296875H31.41455078125V34.6H27.63525390625L22.86279296875 25.6V34.6H19.65478515625ZM42.18212890625 32.209375H36.89111328125L36.05615234375 34.6H32.65478515625L37.51513671875 21.4779296875H41.54931640625L46.40966796875 34.6H43.00830078125ZM37.73486328125 29.7748046875H41.32958984375L39.53662109375 24.5541015625Z" fill="@T" transform="translate(-1.05 0)"/><rect x="12" y="38" width="40" height="5" rx="1.5" fill="#4a5058"/><path d="M11 24c-2.5 0-4 1.8-4 4v18c0 3 1.5 5 4 6l3 .8V48.5l-1.5-.7c-.6-.3-1-1-1-1.8V29c0-.8.5-1.4 1.2-1.6L14 27v-3z" fill="#4a5058"/><path d="M53 24c2.5 0 4 1.8 4 4v18c0 3-1.5 5-4 6l-3 .8V48.5l1.5-.7c.6-.3 1-1 1-1.8V29c0-.8-.5-1.4-1.2-1.6L50 27v-3z" fill="#4a5058"/></svg>';
+const mixW = (h, k) => '#' + [1,3,5].map(i => Math.round(parseInt(h.substr(i,2),16) + (255 - parseInt(h.substr(i,2),16)) * k).toString(16).padStart(2,'0')).join('');
+const lum = h => [1,3,5].map(i => { const c = parseInt(h.substr(i,2),16) / 255; return c <= .03928 ? c / 12.92 : ((c + .055) / 1.055) ** 2.4; }).reduce((a, c, i) => a + c * [.2126,.7152,.0722][i], 0);
+const favicon = c => 'data:image/svg+xml,' + encodeURIComponent(FAVICON.replace(/@@/g, c).replace(/@L/g, mixW(c, .35)).replace(/@T/g, lum(c) > .5 ? '#111' : '#fff'));
 const THEMES = {lime:'#b6ff00',pink:'#ff7aa8',teal:'#22c1d6',orange:'#ff9a1f'};
 let lang = localStorage.getItem('lang') || (/^zh/i.test(navigator.language) ? 'zh' : 'en');
 let theme = localStorage.getItem('theme'); if (!THEMES[theme]) theme = 'lime';
@@ -29,6 +33,7 @@ function applyLang() {
 }
 function applyTheme() {
   document.documentElement.style.setProperty('--accent', THEMES[theme]);
+  document.querySelector('link[rel=icon]').href = favicon(THEMES[theme]);
   document.querySelector('meta[name=theme-color]').content = '#111111';
   document.querySelectorAll('.sw').forEach(b => b.classList.toggle('sel', b.dataset.t === theme));
 }

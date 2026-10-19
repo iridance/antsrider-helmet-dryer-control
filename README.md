@@ -1,4 +1,4 @@
-# <img src="site/icon-192.png" alt="" width="40" align="absmiddle"> NA ANTSRIDER 安全帽風乾消毒機 控制器
+# <img src="site/app-icon-192.png" alt="" width="40" align="absmiddle"> NA ANTSRIDER 安全帽風乾消毒機 控制器
 
 [English](README.en.md)
 

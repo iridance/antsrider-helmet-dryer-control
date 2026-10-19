@@ -1,4 +1,4 @@
-# <img src="site/icon-192.png" alt="" width="40" align="absmiddle"> NA ANTSRIDER Helmet Dryer & Sterilizer Controller
+# <img src="site/app-icon-192.png" alt="" width="40" align="absmiddle"> NA ANTSRIDER Helmet Dryer & Sterilizer Controller
 
 [繁體中文](README.md)
 

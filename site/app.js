@@ -108,7 +108,7 @@ function setConnected(on, text) {
 }
 
 const sleep = (ms, v) => new Promise(r => setTimeout(() => r(v), ms));
-// Each command waits for the device's 03 reply (up to 2 s) before the next one is sent.
+// Each command waits for the device's reply ending in 03 (e.g. 03, or 01 03 for UV off) (up to 2 s) before the next one is sent.
 let ackDone = null;
 const waitAck = (ms = 2000) => new Promise(r => { const tm = setTimeout(() => { ackDone = null; log(t('noAck')); r(); }, ms); ackDone = () => { clearTimeout(tm); ackDone = null; r(); }; });
 async function send(bytes, desc) {
@@ -121,25 +121,31 @@ async function send(bytes, desc) {
     msg(''); await ack; return true;
   } catch (e) { log(t('sendFail') + e.message); msg(t('sendFailMsg')); return false; }
 }
-// The device may reset its timer on other commands, so the timer is always sent last (remaining minutes, start time unchanged).
+// At start the timer is sent last, after fan and UV.
 const sendTime = n => { const d = devMin(n); return send([0xAA,0x02,(d>>8)&255,d&255], t('time') + ' ' + timeLabel(n)); };
-const remainMin = () => minutes === 0 || !startedAt || !runMin ? minutes : Math.max(1, Math.ceil((startedAt + runMin * 60000 - Date.now()) / 60000));
-const resendTime = async () => { if (running) await sendTime(remainMin()); };
-async function pickFan(n) { const old = fan; fan = n; render(); if (!running) return; if (!await send([0xAA,0x01,n], t('fan') + ' ' + fanLabel(n))) { fan = old; render(); return; } await resendTime(); }
+async function pickFan(n) { const old = fan; fan = n; render(); if (!running) return; if (!await send([0xAA,0x01,n], t('fan') + ' ' + fanLabel(n))) { fan = old; render(); } }
 async function pickTime(n) { const old = minutes; minutes = n; render(); if (!running) return; if (!await sendTime(n)) { minutes = old; render(); return; } markStart(); }
-async function toggleUV() { const old = uvOn; uvOn = !uvOn; render(); if (!running) return; if (!await send([0xAA,0x03,0x00,0x00,uvOn?1:0], t('uv') + ' ' + (uvOn ? t('onv') : t('offv')))) { uvOn = old; render(); return; } await resendTime(); }
+async function toggleUV() { const old = uvOn; uvOn = !uvOn; render(); if (!running) return; if (!await send([0xAA,0x03,0x00,0x00,uvOn?1:0], t('uv') + ' ' + (uvOn ? t('onv') : t('offv')))) { uvOn = old; render(); } }
 
 $('logOpen').onclick = () => { $('logModal').showModal(); $('log').scrollTop = $('log').scrollHeight; };
 $('logClose').onclick = () => $('logModal').close();
 $('logClear').onclick = () => { logEmpty = true; logLines = []; $('log').textContent = t('noLog'); };
 $('logModal').addEventListener('click', e => { if (e.target === $('logModal')) $('logModal').close(); });
+// Ignore presses while a start/stop sequence is still being sent, so two sequences never interleave.
+let busy = false;
 $('start').onclick = async () => {
+  if (busy) return;
+  busy = true;
+  try { await startStop(); } finally { busy = false; }
+};
+async function startStop() {
   if (!running) {
     if (fan === 0) fan = 1;
     running = true; render();
     let ok = true;
     ok = await send([0xAA,0x01,fan], t('fan') + ' ' + fanLabel(fan));
-    if (ok) ok = await send([0xAA,0x03,0x00,0x00,uvOn ? 1 : 0], t('uv') + ' ' + (uvOn ? t('onv') : t('offv')));
+    // Sending "UV off" right after power-on makes the device shut down, so UV is only sent when it should be on.
+    if (ok && uvOn) ok = await send([0xAA,0x03,0x00,0x00,1], t('uv') + ' ' + t('onv'));
     if (ok) ok = await sendTime(minutes);
     if (!ok) { running = false; render(); return; }
     markStart(); msg(t('startSent'));
@@ -150,7 +156,7 @@ $('start').onclick = async () => {
     if (!ok) { running = true; startedAt = old0; runMin = oldMin; render(); return; }
     msg(t('stopped'));
   }
-};
+}
 const sendOff = async () => await send([0xAA,0x01,0], t('fan') + ' ' + t('offv'))
   && await send([0xAA,0x02,0,0], t('time') + ' ' + t('offv'))
   && await send([0xAA,0x03,0x00,0x00,0], t('uv') + ' ' + t('offv'));
@@ -201,7 +207,7 @@ async function connectTo(dev) {
   try {
     const n = await svc.getCharacteristic(NOTIFY_CHAR);
     await n.startNotifications();
-    n.addEventListener('characteristicvaluechanged', e => { log(t('reply') + '  [' + hex(e.target.value) + ']'); if (e.target.value.byteLength && e.target.value.getUint8(0) === 0x03 && ackDone) ackDone(); });
+    n.addEventListener('characteristicvaluechanged', e => { log(t('reply') + '  [' + hex(e.target.value) + ']'); if (e.target.value.byteLength && e.target.value.getUint8(e.target.value.byteLength - 1) === 0x03 && ackDone) ackDone(); });
   } catch (e) { log(t('noNotify') + e.message); }
   if (!paired) { paired = true; localStorage.setItem('paired', '1'); renderAuto(); }
   setConnected(true, t('connected') + ' ' + (dev.name || ''));

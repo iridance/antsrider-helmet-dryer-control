@@ -134,9 +134,9 @@ $('start').onclick = async () => {
     if (fan === 0) fan = 1;
     running = true; render();
     let ok = true;
-    ok = await send([0xAA,0x01,fan], t('fan') + ' ' + fanLabel(fan)) && await sleep(400, true);
-    if (ok) ok = await send([0xAA,0x03,0x00,0x00,uvOn ? 1 : 0], t('uv') + ' ' + (uvOn ? t('onv') : t('offv'))) && await sleep(400, true);
-    if (ok) ok = await sendTime(minutes);
+    ok = await send([0xAA,0x01,fan], t('fan') + ' ' + fanLabel(fan)) && await sleep(1000, true);
+    if (ok) ok = await sendTime(minutes) && await sleep(1000, true);
+    if (ok) ok = await send([0xAA,0x03,0x00,0x00,uvOn ? 1 : 0], t('uv') + ' ' + (uvOn ? t('onv') : t('offv')));
     if (!ok) { running = false; render(); return; }
     markStart(); msg(t('startSent'));
   } else {

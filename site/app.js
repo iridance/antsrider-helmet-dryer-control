@@ -144,9 +144,10 @@ async function startStop() {
     running = true; render();
     let ok = true;
     ok = await send([0xAA,0x01,fan], t('fan') + ' ' + fanLabel(fan));
-    // Sending "UV off" right after power-on makes the device shut down, so UV is only sent when it should be on.
-    if (ok && uvOn) ok = await send([0xAA,0x03,0x00,0x00,1], t('uv') + ' ' + t('onv'));
+    // A UV command followed by the timer makes the device shut down, so the timer goes right after the fan,
+    // and UV is sent last and only when it should be on.
     if (ok) ok = await sendTime(minutes);
+    if (ok && uvOn) ok = await send([0xAA,0x03,0x00,0x00,1], t('uv') + ' ' + t('onv'));
     if (!ok) { running = false; render(); return; }
     markStart(); msg(t('startSent'));
   } else {
